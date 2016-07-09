@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shapefile visualisation</title>
+    <meta name="description" content="Shapefile visualisation">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <div class="padded_options">
+      <div class="flex_parent">
+
+        <div class="flex_item">
+          <div id='metric' class='selections'>
+            <label for="shapeColoursVariable">Choose metric to use for area shading:
+            </label>
+            <select name="shapeColoursVariable" id="shapeColoursVariable">
+            </select>
+          </div>
+        </div>
+        
+        <div class="flex_item">
+          <div id='metric' class='selections'>
+            <label for="colourOptions">Select colour scheme:
+            </label>
+            <select name="colourOptions" id="colourOptions">
+            </select>
+          </div>
+        </div>
+
+         <div class="flex_item">
+          <div id='metric' class='selections'>
+            <label for="filterData">Choose period:
+            </label>
+            <select name="filterData" id="filterData">
+
+            </select>
+            <button id="plus_dates">+</button>
+              <button id="minus_dates">-</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id='hover_panel'>
+      <h3>Hover over areas to display statistics</h3>
+    
+    </div>
+
+     <div id='hover_panel_charts'>
+      <h3>Hover over areas to display statistics</h3>
+    
+    </div>
+
+    <script src="js/leaflet.txt"></script>
+    <script src="js/d3.txt"></script>
+    <script src="js/topojson.v1.min.txt"></script>
+    <script src="js/underscore.txt"></script>
+    <script src="js/jquery.txt"></script>
+    <script src="js/handlebars-v4.0.5.txt"></script>
+    <script src="js/utils.txt"></script>
+    <script src="js/settings.txt"></script>
+    <script src="js/shapefilemap.txt"></script>
+    <script src="js/little_line_chart.txt"></script>
+    <script src="js/dataholder.txt"></script>
+    <script src="js/main.txt"></script>
+    
+
+    <script id="hp_info" type="text/x-handlebars-template">
+      <div class="entry">
+        <div>
+          <h2>{{NAME}} {{CODE}}</h2>
+          <h4>{{date}}</h4>
+          <h4>Claims = {{claims}}</h4>
+          <h4>Outright orders = {{outright_orders}}</h4>
+          <h4>Repossessions = {{repossessions}}</h4>
+          <h4>Warrants = {{warrants}}</h4>
+
+        </div>
+      </div>
+    </script>
+  </body>
+</html

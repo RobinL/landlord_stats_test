@@ -1,0 +1,45 @@
+var BMT = {} //BoundaryMapTemplate
+
+//The following two global variables define the field to use to join your csv data to the 
+//shapes in the shapefile.
+BMT.shapefile_join_field = "CODE"
+BMT.data_join_field = "la_code"
+
+BMT.filter_field = "date"
+
+BMT.shapefile_path = "topojson/topo_lad.json"
+BMT.csv_path = "data/accelerated_landlord_data.csv"
+
+//Colour options for shading
+BMT.colour_options = {
+    "Condensed" : ["#6ae817","#c3dd24","#f0ab26","#c22d10","#a10408","#6b0205","#360103","#1b0101","#0d0001","#000000"],
+    "Red (high) to green (low)": ["#6AE817","#FFA200", "#B30409"],
+    "Blues": ["#B5EED9", "#37BAE5",  "#132978", "#0D162C"],
+};
+
+BMT.categorical_colours = ["#777", "#dc3912", "#ff9900", "#0E8917", "#990099", "#0099c6", "#dd4477", "#A6FF3C", "#FF3F42", "#1C3C5D", "#D860DA"];
+
+//Manual overrides on the description of the columns in the csv file.
+BMT.column_descriptions_data = {
+    "claims": {
+        "long_name": "Claims"
+
+    },
+    "outright_orders": {
+        "long_name": "Outright orders",
+    },
+    "repossessions": {
+        "long_name": "Repossessions",
+    },
+    "suspended_orders": {
+        "long_name": "Suspended orders",
+    },
+    "warrants": {
+        "long_name": "Warrants",
+    },
+    "date": {
+        "val_parser": d3.time.format('%Y-%m-%d').parse,
+        "format": d3.time.format('%Y-%m-%d')
+    }
+
+}

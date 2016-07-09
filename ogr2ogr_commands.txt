@@ -1,0 +1,3 @@
+ogr2ogr -t_srs WGS84  -f GeoJSON   fixed.geojson   district_borough_unitary_region.shp
+
+topojson -o fixed.topojson fixed.geojson --simplify-proportion 0.04 -p

@@ -1,0 +1,38 @@
+function convert_to_float(csv_data) {
+
+    // For each variable, check whether categorical and if not convert to float
+
+    _.each(_.keys(csv_data[0]), function(this_key) {
+        var is_categorical = _.some(csv_data, function(d) {
+
+                    this_value = d[this_key];
+                    if (this_value !== "") {
+                        var pf = parseFloat(this_value)
+
+                        if (isNaN(pf)) {
+                            return true
+                        }
+                    }
+                    return false
+
+        })
+
+        if (!(is_categorical)) {
+            _.each(csv_data, function(d) {
+                d[this_key] = +d[this_key]
+            })
+        }
+    })
+    return csv_data
+}
+
+function get_min_max_from_csv(csv_data, key) {
+    var all_values = _.map(csv_data, function(d) {
+                    return d[key]
+                });
+
+                var minMetric = Math.min.apply(null, all_values);
+                var maxMetric = Math.max.apply(null, all_values);
+
+    return {"min": minMetric, "max": maxMetric}
+}

@@ -1,0 +1,140 @@
+var p1 = $.ajax(BMT.shapefile_path)
+var p2 = $.ajax(BMT.csv_path)
+
+$.when(p1,p2).done(function(topo_data, csv_data) {
+
+  //Convert topo_json to geojson
+  var geo_collection = topo_data[0]
+  var geo_collection = topojson.feature(geo_collection, geo_collection.objects.fixed)
+  BMT.geo_collection = geo_collection;
+
+  //Parse the csv data
+  var csv_data = d3.csv.parse(csv_data[0])
+
+  //Add the csv data to the data manager 
+  BMT.dataholder = new DataHolder(csv_data)
+  BMT.dataholder.process_column_descriptions()
+  BMT.dataholder.parse_columns()
+  BMT.dataholder.set_domains()  
+  
+
+  //Draw options
+  var list_of_metrics = getListOfMetrics();
+  var metrics_options_data = metrics_to_options_data(list_of_metrics);
+  draw_options("#shapeColoursVariable",metrics_options_data)
+
+  var colour_options_data = colour_options_to_options_data()
+  draw_options("#colourOptions",colour_options_data)
+  draw_options("#filterData",period_to_options_data())
+
+  $("#shapeColoursVariable, #colourOptions, #filterData").on("change", function(d) {
+    
+    BMT.shapefilemap.redraw()
+  })
+
+   d3.select("#plus_dates").on("click", function(d) {
+
+        var current = $("#filterData").val()
+        
+        var periods = BMT.period_options 
+      
+
+        var current_index = periods.indexOf(current)
+        var new_index = Math.min(current_index + 1, periods.length - 1)
+        var new_period = periods[new_index]
+
+        $("#filterData").val(new_period).change();
+
+    });
+
+    d3.select("#minus_dates").on("click", function(d) {
+
+        var current = $("#filterData").val()
+        var periods = BMT.period_options 
+
+        var current_index = periods.indexOf(current)
+        var new_index = Math.max(current_index - 1, 0)
+        var new_period = periods[new_index]
+
+        $("#filterData").val(new_period).change();
+
+    })
+
+  //Finally draw map
+  BMT.shapefilemap = new ShapefileMap(BMT.geo_collection)
+
+
+});
+
+var getListOfMetrics = function() {
+    
+    var fields = _.filter(BMT.column_descriptions_data, function(d) {
+        return d["manually_included"]
+    })
+
+    var list = _.map(fields, function(d) {
+        return d.key
+    })
+    
+    return list
+}
+
+function metrics_to_options_data(metrics)  {
+  return _.map(metrics, function(d) {
+    return {"value": d, "text": BMT.column_descriptions_data[d].long_name}
+  })
+}
+
+function colour_options_to_options_data() {
+  return _.map(BMT.colour_options, function(k,v) {
+    return {"value":v, "text":v}
+  })
+}
+
+function period_to_options_data() {
+
+  var format = BMT.column_descriptions_data[BMT.filter_field].format
+  var uniques = _.unique(BMT.dataholder.all_csv_data, function(d) {
+    
+    return format(d[BMT.filter_field]);
+  })
+
+  var uniques = _.map(uniques, function(d) {
+    return d[BMT.filter_field];
+  })
+
+  uniques = uniques.sort(function(a,b) { 
+    return a.getTime()-b.getTime()
+  })
+
+  var return_array =  _.map(uniques, function(d) {
+    return {"text": format(d), "value":format(d)}
+  })
+
+  BMT.period_options = _.map(uniques, format);
+
+  return return_array
+
+
+
+
+}
+
+
+function draw_options(selector, data) {
+
+  d3.select(selector).selectAll('option')
+      .data(data)
+      .enter()
+      .append("option")
+      .attr("value", function(d) {
+          return d["value"]
+      })
+      .text(function(d) {
+          return d["text"]
+      })
+
+    // $(selector).val(data[0]["value"]);
+};
+
+      
